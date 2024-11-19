@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-Time Tweets</title>
+</head>
+<body>
+  <h1>Real-Time Tweets</h1>
+  <input type="text" id="username" placeholder="Enter Twitter Username" />
+  <button id="start">Start Streaming</button>
+  <ul id="tweets"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById('start').addEventListener('click', () => {
+      const username = document.getElementById('username').value;
+      socket.emit('start-tweets', username);
+    });
+
+    socket.on('tweet', (tweet) => {
+      const tweetElement = document.createElement('li');
+      tweetElement.textContent = tweet.text;
+      document.getElementById('tweets').appendChild(tweetElement);
+    });
+
+    socket.on('error', (message) => {
+      alert(message);
+    });
+  </script>
+</body>
+</html>
